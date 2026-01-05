@@ -1,0 +1,142 @@
+{
+  "identity": {
+    "name": "Chalboo",
+    "persona": "E1: The Anti-AI Designer",
+    "vibe": "Electric Earth - Vibrant, Spontaneous, Connected",
+    "core_philosophy": "Every trip is a story. The UI should feel like a travel journal coming to life."
+  },
+  "typography": {
+    "headings": {
+      "family": "Syne, sans-serif",
+      "url": "https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap",
+      "usage": "Use for all H1-H3. Tight tracking (-0.02em). Weight 700 or 800 for impact.",
+      "fallback": "sans-serif"
+    },
+    "body": {
+      "family": "Outfit, sans-serif",
+      "url": "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap",
+      "usage": "Use for paragraphs, UI labels, and inputs. relaxed leading.",
+      "fallback": "sans-serif"
+    },
+    "mono": {
+      "family": "JetBrains Mono, monospace",
+      "url": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap",
+      "usage": "Use for dates, prices, and technical details (flight numbers, etc).",
+      "fallback": "monospace"
+    }
+  },
+  "colors": {
+    "palette": {
+      "primary": "#FF5A1F",
+      "primary_foreground": "#FFFFFF",
+      "secondary": "#1A4D2E",
+      "secondary_foreground": "#E2E8F0",
+      "background": "#FDFCF8",
+      "foreground": "#0F172A",
+      "card": "#FFFFFF",
+      "card_foreground": "#0F172A",
+      "muted": "#F1F5F9",
+      "muted_foreground": "#64748B",
+      "accent": "#FFD600",
+      "accent_foreground": "#0F172A",
+      "destructive": "#EF4444",
+      "destructive_foreground": "#FFFFFF",
+      "border": "#E2E8F0",
+      "input": "#F1F5F9",
+      "ring": "#FF5A1F"
+    },
+    "gradients": {
+      "hero": "linear-gradient(135deg, #FF5A1F 0%, #FF9A00 100%)",
+      "glass": "rgba(255, 255, 255, 0.7)"
+    },
+    "css_vars": {
+      "light": {
+        "--background": "40 20% 98%",
+        "--foreground": "222 47% 11%",
+        "--card": "0 0% 100%",
+        "--card-foreground": "222 47% 11%",
+        "--popover": "0 0% 100%",
+        "--popover-foreground": "222 47% 11%",
+        "--primary": "16 100% 56%",
+        "--primary-foreground": "0 0% 100%",
+        "--secondary": "143 50% 20%",
+        "--secondary-foreground": "210 40% 98%",
+        "--muted": "210 40% 96.1%",
+        "--muted-foreground": "215.4 16.3% 46.9%",
+        "--accent": "48 100% 50%",
+        "--accent-foreground": "222 47% 11%",
+        "--destructive": "0 84.2% 60.2%",
+        "--destructive-foreground": "210 40% 98%",
+        "--border": "214.3 31.8% 91.4%",
+        "--input": "214.3 31.8% 91.4%",
+        "--ring": "16 100% 56%",
+        "--radius": "0.75rem"
+      }
+    }
+  },
+  "visual_enhancers": {
+    "radius": "rounded-xl",
+    "shadows": {
+      "card": "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      "button": "4px 4px 0px 0px #0F172A",
+      "hover": "2px 2px 0px 0px #0F172A"
+    },
+    "textures": {
+      "noise": "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E\")"
+    }
+  },
+  "layout_strategies": {
+    "landing_page": {
+      "grid": "Bento Grid (Mode A: Tetris)",
+      "hero_alignment": "Left aligned with massive typography (text-7xl+)",
+      "spacing": "Generous (gap-8 to gap-12)",
+      "decorations": "Use abstract topographic lines or map markers as background elements."
+    },
+    "dashboard": {
+      "grid": "Control Room Grid (Mode B)",
+      "card_style": "Flat white cards with 1px border-border and subtle shadow.",
+      "sidebar": "Fixed left sidebar, dark green (secondary color) background."
+    },
+    "trip_cards": {
+      "style": "Ticket Stub Aesthetic",
+      "details": "Use dashed lines for separation. Barcode decoration at the bottom. Image takes top 60%."
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-primary text-white hover:translate-y-[-2px] hover:shadow-[4px_4px_0px_0px_#0F172A] transition-all duration-200 rounded-full px-8 py-6 font-bold tracking-wide",
+      "secondary": "bg-white border-2 border-foreground text-foreground hover:bg-accent transition-all duration-200 rounded-full px-8 py-6 font-bold"
+    },
+    "inputs": {
+      "style": "bg-white border-2 border-input focus:border-primary focus:ring-0 rounded-lg h-12 px-4 font-body"
+    },
+    "cards": {
+      "base": "bg-card text-card-foreground rounded-xl border border-border shadow-sm overflow-hidden"
+    }
+  },
+  "image_urls": {
+    "hero_background": "https://images.pexels.com/photos/697244/pexels-photo-697244.jpeg",
+    "van_life": "https://images.pexels.com/photos/6946074/pexels-photo-6946074.jpeg",
+    "backpacker_portrait": "https://images.pexels.com/photos/8869308/pexels-photo-8869308.jpeg",
+    "mountain_landscape": "https://images.pexels.com/photos/35250067/pexels-photo-35250067.jpeg",
+    "beach_party": "https://images.pexels.com/photos/5098286/pexels-photo-5098286.jpeg"
+  },
+  "instructions_to_main_agent": [
+    "1. INSTALL FONTS: Add the Google Fonts links to the <head> of public/index.html immediately.",
+    "2. CONFIGURE TAILWIND: Update tailwind.config.js to use the 'Syne' and 'Outfit' font families and the custom colors defined above.",
+    "3. UPDATE CSS VARIABLES: Replace the contents of src/index.css with the CSS variables provided in the 'colors.css_vars' section.",
+    "4. CLEANUP: Remove all default styles from App.css.",
+    "5. COMPONENT OVERRIDES: When using Shadcn components, ALWAYS override the default radius to 'rounded-xl' and add the 'Syne' font to headings inside dialogs/cards.",
+    "6. IMAGES: Use the provided image_urls for specific sections. Do not use placeholders.",
+    "7. MOTION: Use 'framer-motion' for page transitions and hover effects. Every button must have a hover state.",
+    "8. DATA-TESTID: Add data-testid attributes to all interactive elements (buttons, inputs, links) for testing."
+  ],
+  "universal_guidelines": [
+    "Do not use gradients for text unless it is a very large heading.",
+    "Avoid 'Inter' font entirely. Use 'Outfit' for UI text.",
+    "Use 2-3x more padding than you think is necessary.",
+    "Never center-align long paragraphs of text.",
+    "Use 'sonner' for toast notifications.",
+    "Ensure all text has sufficient contrast (WCAG AA)."
+  ]
+}
