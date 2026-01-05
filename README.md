@@ -92,10 +92,10 @@ mongod
 
 STEP 2: Run Backend (FastAPI)
 -----------------------------
-cd backend
-python -m venv venv
-venv\Scripts\activate
-pip install -r requirements.txt
+cd backend,
+  python -m venv venv,
+  venv\Scripts\activate,
+pip install -r requirements.txt,
 uvicorn server:app --reload
 
 Backend URL:
@@ -108,8 +108,8 @@ http://127.0.0.1:8000/docs
 
 STEP 3: Run Frontend (React)
 ----------------------------
-cd frontend
-npm install
+cd frontend,
+npm install,
 npm start
 
 Frontend URL:
