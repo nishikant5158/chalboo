@@ -4,6 +4,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 import os
 import logging
+import random
 from pathlib import Path
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -32,6 +33,19 @@ api_router = APIRouter(prefix="/api")
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+DEFAULT_IMAGE = "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80"
+
+IMAGE_MAP = {
+    "manali": "https://images.unsplash.com/photo-1587502536263-9298e6e1b38b?auto=format&fit=crop&w=1200&q=80",
+    "kashmir": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=1200&q=80",
+    "goa": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    "delhi": "https://images.unsplash.com/photo-1597040663342-45b6af3d91b1?auto=format&fit=crop&w=1200&q=80",
+    "mumbai": "https://images.unsplash.com/photo-1570168007204-dfb528c6958f?auto=format&fit=crop&w=1200&q=80",
+    "pune": "https://images.unsplash.com/photo-1621674058194-3f6c76b1c3fd?auto=format&fit=crop&w=1200&q=80",
+}
+
 
 class ConnectionManager:
     def __init__(self):
@@ -110,7 +124,33 @@ async def get_me(user_id: str = Depends(get_current_user)):
     return user_doc
 
 @api_router.post("/groups", response_model=TravelGroup)
-async def create_group(group_data: TravelGroupCreate, user_id: str = Depends(get_current_user)):
+async def create_group(
+    group_data: TravelGroupCreate,
+    user_id: str = Depends(get_current_user)
+):
+    # ✅ 4 spaces (function level)
+    destination = group_data.to_location.strip().lower()
+
+    IMAGE_MAP = {
+        "manali": "https://unsplash.com/photos/3-women-lying-on-snow-covered-ground-during-daytime-9ttisCSNCOc",
+        "kashmir": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=1200&q=80",
+        "goa": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+        "munnar": "https://images.unsplash.com/photo-1580745084180-2f7f8b1d42c6?auto=format&fit=crop&w=1200&q=80",
+        "ooty": "https://images.unsplash.com/photo-1580810736546-2ec6b10b2a44?auto=format&fit=crop&w=1200&q=80",
+        "coorg": "https://images.unsplash.com/photo-1593693397690-362cb9666fc2?auto=format&fit=crop&w=1200&q=80",
+        "nainital":"https://images.unsplash.com/photo-1610715936287-6c2ad208cdbf?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0",
+
+
+    }
+
+    # ✅ 4 spaces
+    image_url = IMAGE_MAP.get(destination)
+
+    # ✅ if block → 8 spaces inside
+    if not image_url:
+        image_url = f"https://source.unsplash.com/1200x600/?{destination},travel&sig={random.randint(1, 100000)}"
+
+    # ✅ back to 4 spaces
     group = TravelGroup(
         from_location=group_data.from_location,
         to_location=group_data.to_location,
@@ -121,15 +161,18 @@ async def create_group(group_data: TravelGroupCreate, user_id: str = Depends(get
         description=group_data.description,
         max_members=group_data.max_members,
         admin_id=user_id,
-        members=[user_id]
+        members=[user_id],
+        imageUrl=image_url,
     )
-    
+
+
     group_doc = group.model_dump()
-    group_doc['travel_date'] = group_doc['travel_date'].isoformat()
-    group_doc['created_at'] = group_doc['created_at'].isoformat()
-    
+    group_doc["travel_date"] = group_doc["travel_date"].isoformat()
+    group_doc["created_at"] = group_doc["created_at"].isoformat()
+
     await db.travel_groups.insert_one(group_doc)
     return group
+
 
 @api_router.get("/groups", response_model=List[TravelGroup])
 async def search_groups(

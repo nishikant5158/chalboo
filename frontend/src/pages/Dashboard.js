@@ -33,7 +33,7 @@ export default function Dashboard() {
       if (searchParams.from_location) params.from_location = searchParams.from_location;
       if (searchParams.to_location) params.to_location = searchParams.to_location;
       if (searchParams.travel_date) params.travel_date = searchParams.travel_date;
-      
+
       const response = await axios.get(`${API_URL}/groups`, { params });
       setGroups(response.data);
     } catch (error) {
@@ -46,7 +46,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
@@ -120,9 +120,21 @@ export default function Dashboard() {
                 onClick={() => navigate(`/group/${group.id}`)}
                 data-testid={`group-card-${group.id}`}
               >
-                <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                  <MapPin className="w-20 h-20 text-primary" />
+                <div className="h-48 w-full overflow-hidden">
+                  <img
+                    src={group.imageUrl || "https://source.unsplash.com/1200x800/?travel"}
+                    alt={group.to_location}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src =
+                        "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80";
+                    }}
+                  />
+
                 </div>
+
+
                 <div className="p-6 space-y-3">
                   <h3 className="font-heading font-bold text-xl">
                     {group.from_location} → {group.to_location}

@@ -40,6 +40,7 @@ class TravelGroup(BaseModel):
     max_members: int
     admin_id: str
     members: List[str] = Field(default_factory=list)
+    imageUrl: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class TravelGroupCreate(BaseModel):

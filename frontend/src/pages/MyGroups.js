@@ -34,7 +34,7 @@ export default function MyGroups() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <div className="max-w-7xl mx-auto px-6 py-8">
         <h1 className="text-4xl font-heading font-bold mb-2">My Groups</h1>
         <p className="text-muted-foreground mb-8">Groups you've joined</p>
@@ -54,9 +54,17 @@ export default function MyGroups() {
                 onClick={() => navigate(`/group/${group.id}`)}
                 data-testid={`my-group-card-${group.id}`}
               >
-                <div className="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-                  <MapPin className="w-20 h-20 text-primary" />
+                <div className="h-48 w-full overflow-hidden">
+                  <img
+                    src={group.imageUrl}
+                    alt={group.to_location}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://source.unsplash.com/800x600/?travel,nature";
+                    }}
+                  />
                 </div>
+
                 <div className="p-6 space-y-3">
                   <h3 className="font-heading font-bold text-xl">
                     {group.from_location} → {group.to_location}
