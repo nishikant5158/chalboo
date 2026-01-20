@@ -32,7 +32,7 @@ export default function GroupDetail() {
         axios.get(`${API_URL}/groups/${groupId}`),
         axios.get(`${API_URL}/groups/${groupId}/members`)
       ]);
-      
+
       setGroup(groupRes.data);
       setMembers(membersRes.data);
       setIsMember(groupRes.data.members.includes(user.id));
@@ -78,6 +78,51 @@ export default function GroupDetail() {
       toast.error('Failed to reject');
     }
   };
+  const handleDeleteGroup = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this group? This action cannot be undone."
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(
+        `${API_URL}/groups/${groupId}`,
+        getAuthHeader()
+      );
+
+      toast.success("Group deleted successfully");
+      navigate("/my-groups");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.detail || "Failed to delete group"
+      );
+    }
+  };
+
+  const handleLeaveGroup = async () => {
+    const confirmLeave = window.confirm(
+      "Are you sure you want to leave this group?"
+    );
+
+    if (!confirmLeave) return;
+
+    try {
+      await axios.post(
+        `${API_URL}/groups/${groupId}/leave`,
+        {},
+        getAuthHeader()
+      );
+
+      toast.success("You have left the group");
+      navigate("/my-groups");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.detail || "Failed to leave group"
+      );
+    }
+  };
+
 
   if (loading) {
     return (
@@ -100,10 +145,30 @@ export default function GroupDetail() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      
+
       <div className="max-w-5xl mx-auto px-6 py-8">
         <Card className="p-8 border-2 border-border rounded-xl" data-testid="group-detail-card">
           <div className="flex justify-between items-start mb-6">
+            {isAdmin && (
+              <div className="flex gap-3">
+                <Button
+                  variant="outline"
+                  className="border-2 rounded-full"
+                  onClick={() => navigate(`/groups/${groupId}/edit`)}
+                >
+                  Edit Group
+                </Button>
+
+                <Button
+                  variant="destructive"
+                  className="rounded-full"
+                  onClick={() => handleDeleteGroup()}
+                >
+                  Delete Group
+                </Button>
+              </div>
+            )}
+
             <div>
               <h1 className="text-4xl font-heading font-bold mb-2">
                 {group.from_location} → {group.to_location}
@@ -120,6 +185,15 @@ export default function GroupDetail() {
               >
                 <MessageCircle className="w-5 h-5 mr-2" />
                 Group Chat
+              </Button>
+            )}
+            {isMember && !isAdmin && (
+              <Button
+                variant="destructive"
+                onClick={handleLeaveGroup}
+                className="rounded-full px-6 ml-3"
+              >
+                Leave Group
               </Button>
             )}
           </div>

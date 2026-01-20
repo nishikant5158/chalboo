@@ -2,6 +2,7 @@ from fastapi import FastAPI, APIRouter, HTTPException, Depends, WebSocket, WebSo
 from fastapi.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
+from models import TravelGroupUpdate
 import os
 import logging
 import random
@@ -210,6 +211,162 @@ async def get_group(group_id: str):
         group['created_at'] = datetime.fromisoformat(group['created_at'])
     
     return group
+@api_router.delete("/groups/{group_id}")
+async def delete_group(group_id: str, user_id: str = Depends(get_current_user)):
+    group = await db.travel_groups.find_one({"id": group_id})
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    if group["admin_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Only admin can delete this group")
+
+    # Delete related data (optional but good practice)
+    await db.join_requests.delete_many({"group_id": group_id})
+    await db.messages.delete_many({"group_id": group_id})
+
+    await db.travel_groups.delete_one({"id": group_id})
+
+    return {"message": "Group deleted successfully"}
+
+@api_router.post("/groups/{group_id}/leave")
+async def leave_group(
+    group_id: str,
+    user_id: str = Depends(get_current_user)
+):
+    # 1. Group fetch
+    group = await db.travel_groups.find_one({"id": group_id})
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # 2. Check membership
+    if user_id not in group["members"]:
+        raise HTTPException(status_code=400, detail="You are not a member of this group")
+
+    # 3. Admin cannot leave
+    if group["admin_id"] == user_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Admin cannot leave the group. Transfer admin rights first."
+        )
+
+    # 4. Remove user from members
+    await db.travel_groups.update_one(
+        {"id": group_id},
+        {"$pull": {"members": user_id}}
+    )
+
+    return {"message": "You have left the group successfully"}
+
+
+@api_router.put("/groups/{group_id}", response_model=TravelGroup)
+async def update_group(
+    group_id: str,
+    group_data: TravelGroupUpdate,   # ✅ UPDATE MODEL
+    user_id: str = Depends(get_current_user)
+):
+    # 1. Group fetch
+    group = await db.travel_groups.find_one({"id": group_id})
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # 2. Admin check
+    if group["admin_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Only admin can edit this group")
+
+    # 3. Only non-null fields
+    update_data = {k: v for k, v in group_data.dict().items() if v is not None}
+
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No fields to update")
+
+    # 4. travel_date handling
+    if "travel_date" in update_data:
+        update_data["travel_date"] = datetime.fromisoformat(
+            update_data["travel_date"]
+        ).isoformat()
+
+    # 5. image update (optional)
+    if "to_location" in update_data:
+        destination = update_data["to_location"].strip().lower()
+        update_data["imageUrl"] = IMAGE_MAP.get(
+            destination,
+            f"https://source.unsplash.com/1200x600/?{destination},travel&sig={random.randint(1, 100000)}"
+        )
+
+    # 6. Mongo update
+    await db.travel_groups.update_one(
+        {"id": group_id},
+        {"$set": update_data}
+    )
+
+    updated_group = await db.travel_groups.find_one(
+        {"id": group_id},
+        {"_id": 0}
+    )
+
+    # date conversion
+    if isinstance(updated_group.get("travel_date"), str):
+        updated_group["travel_date"] = datetime.fromisoformat(
+            updated_group["travel_date"]
+        )
+    if isinstance(updated_group.get("created_at"), str):
+        updated_group["created_at"] = datetime.fromisoformat(
+            updated_group["created_at"]
+        )
+
+    return updated_group
+
+    destination = group_data.to_location.strip().lower()
+
+    image_url = IMAGE_MAP.get(
+        destination,
+        f"https://source.unsplash.com/1200x600/?{destination},travel&sig={random.randint(1, 100000)}"
+    )
+
+    update_data = {
+        "from_location": group_data.from_location,
+        "to_location": group_data.to_location,
+        "travel_date": datetime.fromisoformat(group_data.travel_date).isoformat(),
+        "budget_min": group_data.budget_min,
+        "budget_max": group_data.budget_max,
+        "trip_type": group_data.trip_type,
+        "description": group_data.description,
+        "max_members": group_data.max_members,
+        "imageUrl": image_url
+    }
+    await db.travel_groups.update_one(
+        {"id": group_id},
+        {"$set": update_data}
+    )
+
+    updated_group = await db.travel_groups.find_one(
+    {"id": group_id},
+    {"_id": 0}
+)
+
+# ✅ safety check (VERY IMPORTANT)
+    if not updated_group:
+        raise HTTPException(status_code=404, detail="Group not found after update")
+
+# travel_date conversion
+    if isinstance(updated_group.get("travel_date"), str):
+        updated_group["travel_date"] = datetime.fromisoformat(
+            updated_group["travel_date"]
+    )
+
+# created_at conversion
+    if isinstance(updated_group.get("created_at"), str):
+        updated_group["created_at"] = datetime.fromisoformat(
+            updated_group["created_at"]
+    )
+        return updated_group
+
+
+
+
 
 @api_router.get("/groups/{group_id}/members", response_model=List[User])
 async def get_group_members(group_id: str):

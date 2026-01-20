@@ -53,6 +53,18 @@ class TravelGroupCreate(BaseModel):
     description: str
     max_members: int
 
+class TravelGroupUpdate(BaseModel):
+    from_location: Optional[str] = None
+    to_location: Optional[str] = None
+    travel_date: Optional[str] = None
+    budget_min: Optional[int] = None
+    budget_max: Optional[int] = None
+    trip_type: Optional[str] = None
+    description: Optional[str] = None
+    max_members: Optional[int] = None
+    imageUrl: Optional[str] = None
+
+
 class JoinRequest(BaseModel):
     model_config = ConfigDict(extra="ignore")
     

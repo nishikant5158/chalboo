@@ -7,6 +7,20 @@ import { Button } from '../components/ui/button';
 export default function LandingPage() {
   const navigate = useNavigate();
 
+  const goToDashboard = () => {
+  const token = localStorage.getItem("token");
+  if (!token) navigate("/login");
+  else navigate("/dashboard");
+};
+
+const goToMyGroups = () => {
+  const token = localStorage.getItem("token");
+  if (!token) navigate("/login");
+  else navigate("/my-groups");
+};
+
+
+
   return (
     <div className="min-h-screen bg-background font-body">
       <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -84,18 +98,24 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <h3 className="text-4xl font-heading font-bold text-center mb-16">How It Works</h3>
           <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { icon: MapPin, title: 'Search Routes', desc: 'Find groups traveling your route' },
-              { icon: Users, title: 'Join Groups', desc: 'Request to join travel companions' },
-              { icon: Shield, title: 'Admin Approval', desc: 'Group admins verify members' },
-              { icon: Star, title: 'Rate Experience', desc: 'Share feedback after trips' },
-            ].map((step, idx) => (
+           {[
+  { icon: MapPin, title: 'Search Routes', desc: 'Find groups traveling your route', action: goToDashboard },
+  { icon: Users, title: 'Join Groups', desc: 'Request to join travel companions', action: goToDashboard },
+  { icon: Shield, title: 'Admin Approval', desc: 'Group admins verify members', action: goToDashboard },
+  { icon: Star, title: 'Rate Experience', desc: 'Share feedback after trips', action: goToMyGroups },
+].map((step, idx) => (
+
               <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="bg-card rounded-xl p-8 border-2 border-border text-center hover:border-primary transition-all"
+                onClick={step.action}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && step.action()}
+                className="bg-card rounded-xl p-8 border-2 border-border text-center hover:border-primary transition-all cursor-pointer hover:shadow-lg hover:-translate-y-1"
+
               >
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
                   <step.icon className="w-8 h-8 text-primary" />

@@ -19,7 +19,7 @@ export default function Navbar() {
         <div className="flex justify-between items-center">
           <h1
             className="text-2xl font-heading font-bold text-primary cursor-pointer"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/')}
             data-testid="navbar-logo"
           >
             Chalboo
@@ -28,7 +28,7 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/')}
               data-testid="nav-dashboard-btn"
             >
               <Home className="w-5 h-5 mr-2" />
