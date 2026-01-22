@@ -96,7 +96,8 @@ cd backend,
   python -m venv venv,
   venv\Scripts\activate,
 pip install -r requirements.txt,
-uvicorn server:app --reload
+python -m uvicorn server:app --reload
+
 
 Backend URL:
 http://127.0.0.1:8000
