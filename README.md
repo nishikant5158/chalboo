@@ -98,6 +98,11 @@ cd backend,
 pip install -r requirements.txt,
 python -m uvicorn server:app --reload
 
+another way
+cd backend
+.\run.bat
+
+
 
 Backend URL:
 http://127.0.0.1:8000
